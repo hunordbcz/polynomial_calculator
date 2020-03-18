@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 public class Polynomial {
     SortedMap<Integer, Monomial> polynomial;
+    Integer remainder = 0;
 
     public Polynomial() {
         this.polynomial = new TreeMap<>(Collections.reverseOrder());
@@ -21,7 +22,7 @@ public class Polynomial {
     }
 
     public static Polynomial parsePolynomial(String value) {
-        if (PolynomialUtil.validate(value)) {
+        if (!PolynomialUtil.validate(value)) {
             //todo show error
         }
 
@@ -30,7 +31,7 @@ public class Polynomial {
 
         Polynomial polynomial = null;
         while (matcher.find()) {
-            Monomial monomial = new Monomial(matcher.group());
+            Monomial monomial = Monomial.parseMonomial(matcher.group());
             if (polynomial == null) {
                 polynomial = new Polynomial();
             }
@@ -39,7 +40,7 @@ public class Polynomial {
         return polynomial;
     }
 
-    public SortedMap<Integer, Monomial> push(Monomial monomial) {
+    public void push(Monomial monomial) {
         if (this.polynomial.containsKey(monomial.getPower())) {
             Monomial insideMonomial = this.polynomial.get(monomial.getPower());
             insideMonomial = MonomialUtil.add(insideMonomial, monomial);
@@ -48,7 +49,6 @@ public class Polynomial {
         } else {
             this.polynomial.put(monomial.getPower(), monomial);
         }
-        return this.polynomial;
     }
 
     public String getString() {

@@ -42,13 +42,15 @@ public class MonomialUtil implements Operations<Monomial> {
     }
 
     public static Monomial integrate(Monomial first) {
-        Double coefficent = first.getCoefficient() / first.getPower();
         Integer power = first.getPower() + 1;
+        Double coefficent = first.getCoefficient() / power;
         return new Monomial(coefficent, power);
     }
 
     public static Monomial divide(Monomial first, Monomial second) {
-        //TODO make division
-        return new Monomial(first.getCoefficient() * second.getCoefficient(), first.getPower() + second.getPower());
+        if(first.getPower()<second.getPower()){
+            throw new IllegalArgumentException();
+        }
+        return new Monomial(first.getCoefficient() / second.getCoefficient(), first.getPower() - second.getPower());
     }
 }

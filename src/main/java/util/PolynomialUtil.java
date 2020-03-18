@@ -54,6 +54,18 @@ public class PolynomialUtil {
         return result;
     }
 
+    public static Polynomial multiply(Polynomial polynomial, Monomial monomial){
+        if (!PolynomialUtil.validate(polynomial)) throw new IllegalArgumentException();
+
+        Polynomial result = new Polynomial();
+        for (Integer keyOne : polynomial.getPolynomial().keySet()) {
+            Monomial monomialOne = polynomial.getPolynomial().get(keyOne);
+            result.push(MonomialUtil.multiply(monomialOne, monomial));
+        }
+
+        return result;
+    }
+
     public static Polynomial derive(Polynomial first) {
         if (!PolynomialUtil.validate(first)) throw new IllegalArgumentException();
 
@@ -78,7 +90,18 @@ public class PolynomialUtil {
         return result;
     }
 
-    public static Polynomial divide(Polynomial first, Polynomial second) {
-        return null;
+    public static Polynomial divide(Polynomial numerator, Polynomial denominator) {
+        if(numerator.getPolynomial().firstKey() < denominator.getPolynomial().firstKey()){
+            return numerator;
+        }
+        Polynomial result = new Polynomial();
+        Monomial denominatorHigh = denominator.getPolynomial().get(denominator.getPolynomial().firstKey());
+        while(numerator.getPolynomial().size() != 0 && numerator.getPolynomial().firstKey() >= denominatorHigh.getPower()){
+            Monomial numeratorHigh = numerator.getPolynomial().get(numerator.getPolynomial().firstKey());
+            Monomial monomialDivison = MonomialUtil.divide(numeratorHigh,denominatorHigh);
+            result.push(monomialDivison);
+            numerator = PolynomialUtil.subtract(numerator,PolynomialUtil.multiply(denominator,monomialDivison));
+        }
+        return result;
     }
 }

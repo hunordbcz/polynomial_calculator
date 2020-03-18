@@ -1,33 +1,36 @@
 package models;
 
 public class Monomial implements Comparable<Monomial> {
-    private Integer power = 0;
-    private Double coefficient = 1d;
-
-    public Monomial(String val) {
-        if (val.contains("x")) {
-            this.power = 1;
-        }
-        String[] value = val.split("x\\^|x");
-
-        if (value.length > 0) {
-            if (value[0].equals("-")) {
-                this.coefficient = -1d;
-            } else if (value[0].equals("+")) {
-                this.coefficient = 1d;
-            } else if (!value[0].equals("")) {
-                this.coefficient = Double.parseDouble(value[0]);
-            }
-            if (value.length > 1) {
-                this.power = Integer.parseInt(value[1]);
-            }
-        }
-    }
+    private Integer power;
+    private Double coefficient;
 
     public Monomial(Double coefficient, Integer power) {
         //todo check for validation
         this.power = power;
         this.coefficient = coefficient;
+    }
+
+    public static Monomial parseMonomial(String val) {
+        Monomial monomial = new Monomial(1d,0);
+
+        if (val.contains("x")) {
+            monomial.power = 1;
+        }
+        String[] value = val.split("x\\^|x");
+
+        if (value.length > 0) {
+            if (value[0].equals("-")) {
+                monomial.coefficient = -1d;
+            } else if (value[0].equals("+")) {
+                monomial.coefficient = 1d;
+            } else if (!value[0].equals("")) {
+                monomial.coefficient = Double.parseDouble(value[0]);
+            }
+            if (value.length > 1) {
+                monomial.power = Integer.parseInt(value[1]);
+            }
+        }
+        return monomial;
     }
 
     public Integer getPower() {
