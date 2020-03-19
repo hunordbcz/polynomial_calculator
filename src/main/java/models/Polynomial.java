@@ -1,7 +1,8 @@
 package models;
 
+import exceptions.DifferentPowerException;
+import exceptions.InvalidInputException;
 import util.MonomialUtil;
-import util.PolynomialUtil;
 
 import java.util.Collections;
 import java.util.SortedMap;
@@ -9,9 +10,11 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Polynomial {
+import static validators.PolynomialValidator.regex;
+import static validators.PolynomialValidator.validate;
+
+public class Polynomial implements Comparable<Polynomial> {
     SortedMap<Integer, Monomial> polynomial;
-    Integer remainder = 0;
 
     public Polynomial() {
         this.polynomial = new TreeMap<>(Collections.reverseOrder());
@@ -21,12 +24,10 @@ public class Polynomial {
         this.polynomial = polynomial.getPolynomial();
     }
 
-    public static Polynomial parsePolynomial(String value) {
-        if (!PolynomialUtil.validate(value)) {
-            //todo show error
-        }
+    public static Polynomial parsePolynomial(String value) throws InvalidInputException, DifferentPowerException {
+        if (!validate(value)) throw new InvalidInputException("Polynomial entered is invalid.");
 
-        Pattern pattern = Pattern.compile(PolynomialUtil.regex);
+        Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(value);
 
         Polynomial polynomial = null;
@@ -40,7 +41,7 @@ public class Polynomial {
         return polynomial;
     }
 
-    public void push(Monomial monomial) {
+    public void push(Monomial monomial) throws DifferentPowerException {
         if (this.polynomial.containsKey(monomial.getPower())) {
             Monomial insideMonomial = this.polynomial.get(monomial.getPower());
             insideMonomial = MonomialUtil.add(insideMonomial, monomial);
@@ -66,10 +67,18 @@ public class Polynomial {
                 }
             }
         }
+        if (result.length() == 0) {
+            return "0";
+        }
         return result.toString();
     }
 
     public SortedMap<Integer, Monomial> getPolynomial() {
         return this.polynomial;
+    }
+
+    @Override
+    public int compareTo(Polynomial polynomial) {
+        return this.polynomial.firstKey() - polynomial.getPolynomial().firstKey();
     }
 }

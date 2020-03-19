@@ -1,24 +1,23 @@
 package util;
 
+import exceptions.DifferentPowerException;
+import exceptions.NegativePowerException;
+import exceptions.ZeroDivisionException;
 import models.Monomial;
 import models.Polynomial;
+import models.PolynomialDivision;
 
-import java.util.regex.Pattern;
+import static validators.PolynomialValidator.isNull;
+import static validators.PolynomialValidator.isZero;
 
 public class PolynomialUtil {
-    public static final String regex = "[+-]?((?:\\d*x\\^\\d+)|(?:\\d+x)|(?:x)|(?:\\d+))";
 
-    public static Boolean validate(String toValidate) {
-        Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher(toValidate).replaceAll("").equals("");
-    }
-
-    public static Boolean validate(Polynomial polynomial) {
-        return polynomial != null;
-    }
-
-    public static Polynomial add(Polynomial first, Polynomial second) {
-        if (!PolynomialUtil.validate(first) || !PolynomialUtil.validate(second)) throw new IllegalArgumentException();
+    public static Polynomial add(Polynomial first, Polynomial second) throws DifferentPowerException {
+        if (isNull(first)) {
+            throw new NullPointerException("Add polynom 1");
+        } else if (isNull(second)) {
+            throw new NullPointerException("Add polynom 2");
+        }
 
         Polynomial result = new Polynomial(first);
         for (Integer key : second.getPolynomial().keySet()) {
@@ -28,8 +27,12 @@ public class PolynomialUtil {
         return result;
     }
 
-    public static Polynomial subtract(Polynomial first, Polynomial second) {
-        if (!PolynomialUtil.validate(first) || !PolynomialUtil.validate(second)) throw new IllegalArgumentException();
+    public static Polynomial subtract(Polynomial first, Polynomial second) throws DifferentPowerException {
+        if (isNull(first)) {
+            throw new NullPointerException("Add polynom 1");
+        } else if (isNull(second)) {
+            throw new NullPointerException("Add polynom 2");
+        }
 
         Polynomial result = new Polynomial(first);
         for (Integer key : second.getPolynomial().keySet()) {
@@ -39,8 +42,12 @@ public class PolynomialUtil {
         return result;
     }
 
-    public static Polynomial multiply(Polynomial first, Polynomial second) {
-        if (!PolynomialUtil.validate(first) || !PolynomialUtil.validate(second)) throw new IllegalArgumentException();
+    public static Polynomial multiply(Polynomial first, Polynomial second) throws DifferentPowerException {
+        if (isNull(first)) {
+            throw new NullPointerException("Add polynom 1");
+        } else if (isNull(second)) {
+            throw new NullPointerException("Add polynom 2");
+        }
 
         Polynomial result = new Polynomial();
         for (Integer keyOne : first.getPolynomial().keySet()) {
@@ -54,8 +61,8 @@ public class PolynomialUtil {
         return result;
     }
 
-    public static Polynomial multiply(Polynomial polynomial, Monomial monomial){
-        if (!PolynomialUtil.validate(polynomial)) throw new IllegalArgumentException();
+    public static Polynomial multiply(Polynomial polynomial, Monomial monomial) throws DifferentPowerException {
+        if (isNull(polynomial)) throw new NullPointerException("Add polynom");
 
         Polynomial result = new Polynomial();
         for (Integer keyOne : polynomial.getPolynomial().keySet()) {
@@ -66,8 +73,8 @@ public class PolynomialUtil {
         return result;
     }
 
-    public static Polynomial derive(Polynomial first) {
-        if (!PolynomialUtil.validate(first)) throw new IllegalArgumentException();
+    public static Polynomial derive(Polynomial first) throws DifferentPowerException {
+        if (isNull(first)) throw new NullPointerException("Add polynom");
 
         Polynomial result = new Polynomial();
         for (Integer key : first.getPolynomial().keySet()) {
@@ -78,8 +85,8 @@ public class PolynomialUtil {
         return result;
     }
 
-    public static Polynomial integrate(Polynomial first) {
-        if (!PolynomialUtil.validate(first)) throw new IllegalArgumentException();
+    public static Polynomial integrate(Polynomial first) throws DifferentPowerException {
+        if (isNull(first)) throw new NullPointerException("Add polynom");
 
         Polynomial result = new Polynomial();
         for (Integer key : first.getPolynomial().keySet()) {
@@ -90,18 +97,29 @@ public class PolynomialUtil {
         return result;
     }
 
-    public static Polynomial divide(Polynomial numerator, Polynomial denominator) {
-        if(numerator.getPolynomial().firstKey() < denominator.getPolynomial().firstKey()){
-            return numerator;
+    public static Polynomial divide(Polynomial numerator, Polynomial denominator) throws NegativePowerException, DifferentPowerException, ZeroDivisionException {
+        if (isNull(numerator)) {
+            throw new NullPointerException("Add polynom 1");
+        } else if (isNull(denominator)) {
+            throw new NullPointerException("Add polynom 2");
+        } else if (isZero(denominator)) {
+            throw new ZeroDivisionException();
         }
-        Polynomial result = new Polynomial();
+        PolynomialDivision result = new PolynomialDivision();
+
+        if (numerator.compareTo(denominator) < 0) {
+            result.setRemainder(numerator);
+            return result;
+        }
+
         Monomial denominatorHigh = denominator.getPolynomial().get(denominator.getPolynomial().firstKey());
-        while(numerator.getPolynomial().size() != 0 && numerator.getPolynomial().firstKey() >= denominatorHigh.getPower()){
+        while (numerator.getPolynomial().size() != 0 && numerator.compareTo(denominator) >= 0) {
             Monomial numeratorHigh = numerator.getPolynomial().get(numerator.getPolynomial().firstKey());
-            Monomial monomialDivison = MonomialUtil.divide(numeratorHigh,denominatorHigh);
+            Monomial monomialDivison = MonomialUtil.divide(numeratorHigh, denominatorHigh);
             result.push(monomialDivison);
-            numerator = PolynomialUtil.subtract(numerator,PolynomialUtil.multiply(denominator,monomialDivison));
+            numerator = PolynomialUtil.subtract(numerator, PolynomialUtil.multiply(denominator, monomialDivison));
         }
+        result.setRemainder(numerator);
         return result;
     }
 }

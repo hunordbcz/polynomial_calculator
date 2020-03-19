@@ -5,13 +5,12 @@ public class Monomial implements Comparable<Monomial> {
     private Double coefficient;
 
     public Monomial(Double coefficient, Integer power) {
-        //todo check for validation
         this.power = power;
         this.coefficient = coefficient;
     }
 
     public static Monomial parseMonomial(String val) {
-        Monomial monomial = new Monomial(1d,0);
+        Monomial monomial = new Monomial(1d, 0);
 
         if (val.contains("x")) {
             monomial.power = 1;
