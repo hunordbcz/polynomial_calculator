@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import static validators.PolynomialValidator.validate;
 
 public class Polynomial implements Comparable<Polynomial> {
-    SortedMap<Integer, Monomial> polynomial;
+    private SortedMap<Integer, Monomial> polynomial;
 
     public Polynomial() {
         this.polynomial = new TreeMap<>(Collections.reverseOrder());

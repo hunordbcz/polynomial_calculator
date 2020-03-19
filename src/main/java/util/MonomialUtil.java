@@ -8,7 +8,7 @@ import java.security.InvalidParameterException;
 
 import static validators.MonomialValidator.*;
 
-public class MonomialUtil extends PolynomialUtil {
+public class MonomialUtil {
 
     public static Monomial add(Monomial first, Monomial second) throws DifferentPowerException {
         if (!samePower(first, second)) throw new DifferentPowerException("Different Power Exception at subtract");

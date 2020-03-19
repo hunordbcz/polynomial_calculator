@@ -1,14 +1,13 @@
 package views;
 
 import models.Polynomial;
-import util.MonomialUtil;
 import util.PolynomialUtil;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ViewController extends MonomialUtil {
+public class ViewController {
 
     private JPanel panel;
     private JTextField firstPolynom;
