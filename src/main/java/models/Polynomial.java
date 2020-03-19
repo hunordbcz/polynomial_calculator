@@ -48,7 +48,7 @@ public class Polynomial implements Comparable<Polynomial> {
             polynomial.remove(insideMonomial.getPower());
             if (insideMonomial.getCoefficient() != 0) polynomial.put(insideMonomial.getPower(), insideMonomial);
         } else {
-            this.polynomial.put(monomial.getPower(), monomial);
+            if (monomial.getCoefficient() != 0) this.polynomial.put(monomial.getPower(), monomial);
         }
     }
 

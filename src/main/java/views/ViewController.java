@@ -32,106 +32,159 @@ public class ViewController {
         this.addListeners();
     }
 
-    private void addListeners() {
-        ActionListener actionListener = new ActionListener() {
+    private void deriveFirstListener() {
+        btnDeriveFirst.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String inputFirst = firstPolynom.getText().replace(" ", "").replace("*", "");
-                String inputSecond = secondPolynom.getText().replace(" ", "").replace("*", "");
-
-                Polynomial first = null;
-                Polynomial second = null;
-                String feedbackText = "All good";
-                String result = "";
-
                 try {
-                    second = Polynomial.parsePolynomial(inputSecond);
+                    Polynomial polynomial = Polynomial.parsePolynomial(getFirstPolynom());
+                    setResult(PolynomialUtil.derive(polynomial).getString());
+                    setFeedback("All good");
                 } catch (Exception e) {
-                    feedbackText = "Second polynom is invalid";
+                    setFeedback(e.getMessage());
                 }
-
-                try {
-                    first = Polynomial.parsePolynomial(inputFirst);
-                } catch (Exception e) {
-                    feedbackText = "First polynom is invalid";
-                }
-
-                if (feedbackText.equals("All good")) {
-                    switch (actionEvent.getActionCommand()) {
-                        case "deriveFirst":
-                            try {
-                                result = PolynomialUtil.derive(first).getString();
-                            } catch (Exception e) {
-                                feedbackText = e.getMessage() + " 1";
-                            }
-                            break;
-                        case "deriveSecond":
-                            try {
-                                result = PolynomialUtil.derive(second).getString();
-                            } catch (Exception e) {
-                                feedbackText = e.getMessage() + " 2";
-                            }
-                            break;
-                        case "integrateFirst":
-                            try {
-                                result = PolynomialUtil.integrate(first).getString();
-                            } catch (Exception e) {
-                                feedbackText = e.getMessage() + " 1";
-                            }
-                            break;
-                        case "integrateSecond":
-                            try {
-                                result = PolynomialUtil.integrate(second).getString();
-                            } catch (Exception e) {
-                                feedbackText = e.getMessage() + " 2";
-                            }
-                            break;
-                        case "add":
-                            try {
-                                result = PolynomialUtil.add(first, second).getString();
-                            } catch (Exception e) {
-                                feedbackText = e.getMessage();
-                            }
-                            break;
-                        case "subtract":
-                            try {
-                                result = PolynomialUtil.subtract(first, second).getString();
-                            } catch (Exception e) {
-                                feedbackText = e.getMessage();
-                            }
-                            break;
-                        case "divide":
-                            try {
-                                result = PolynomialUtil.divide(first, second).getString();
-                            } catch (Exception e) {
-                                feedbackText = e.getMessage();
-                            }
-                            break;
-                        case "multiply":
-                            try {
-                                result = PolynomialUtil.multiply(first, second).getString();
-                            } catch (Exception e) {
-                                feedbackText = e.getMessage();
-                            }
-                            break;
-                        default:
-                            feedbackText = "Invalid operation";
-                            break;
-                    }
-                }
-                resultPolynom.setText(result);
-                feedback.setText(feedbackText);
             }
-        };
+        });
+    }
 
-        btnDeriveFirst.addActionListener(actionListener);
-        btnDeriveSecond.addActionListener(actionListener);
-        btnMultiply.addActionListener(actionListener);
-        btnDivide.addActionListener(actionListener);
-        btnAdd.addActionListener(actionListener);
-        btnSubtract.addActionListener(actionListener);
-        btnIntegrateFirst.addActionListener(actionListener);
-        btnIntegrateSecond.addActionListener(actionListener);
+    private void deriveSecondListener() {
+        btnDeriveSecond.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    Polynomial polynomial = Polynomial.parsePolynomial(getSecondPolynom());
+                    setResult(PolynomialUtil.derive(polynomial).getString());
+                    setFeedback("All good");
+                } catch (Exception e) {
+                    setFeedback(e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void integrateFirstListener() {
+        btnIntegrateFirst.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    Polynomial polynomial = Polynomial.parsePolynomial(getFirstPolynom());
+                    setResult(PolynomialUtil.integrate(polynomial).getString());
+                    setFeedback("All good");
+                } catch (Exception e) {
+                    setFeedback(e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void integrateSecondListener() {
+        btnIntegrateSecond.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    Polynomial polynomial = Polynomial.parsePolynomial(getSecondPolynom());
+                    setResult(PolynomialUtil.integrate(polynomial).getString());
+                    setFeedback("All good");
+                } catch (Exception e) {
+                    setFeedback(e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void muliplyListener() {
+        btnMultiply.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    Polynomial first = Polynomial.parsePolynomial(getFirstPolynom());
+                    Polynomial second = Polynomial.parsePolynomial(getSecondPolynom());
+                    setResult(PolynomialUtil.multiply(first, second).getString());
+                    setFeedback("All good");
+                } catch (Exception e) {
+                    setFeedback(e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void divideListener() {
+        btnDivide.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    Polynomial first = Polynomial.parsePolynomial(getFirstPolynom());
+                    Polynomial second = Polynomial.parsePolynomial(getSecondPolynom());
+                    setResult(PolynomialUtil.divide(first, second).getString());
+                    setFeedback("All good");
+                } catch (Exception e) {
+                    setFeedback(e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void addListener() {
+        btnAdd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    Polynomial first = Polynomial.parsePolynomial(getFirstPolynom());
+                    Polynomial second = Polynomial.parsePolynomial(getSecondPolynom());
+                    setResult(PolynomialUtil.add(first, second).getString());
+                    setFeedback("All good");
+                } catch (Exception e) {
+                    setFeedback(e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void subtractListener() {
+        btnSubtract.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try {
+                    Polynomial first = Polynomial.parsePolynomial(getFirstPolynom());
+                    Polynomial second = Polynomial.parsePolynomial(getSecondPolynom());
+                    setResult(PolynomialUtil.subtract(first, second).getString());
+                    setFeedback("All good");
+                } catch (Exception e) {
+                    setFeedback(e.getMessage());
+                }
+            }
+        });
+    }
+
+    private String simplify(String value) {
+        return value.replace(" ", "").replace("*", "");
+    }
+
+    private String getFirstPolynom() {
+        return simplify(firstPolynom.getText());
+    }
+
+    private String getSecondPolynom() {
+        return simplify(secondPolynom.getText());
+    }
+
+    private void setResult(String value) {
+        this.resultPolynom.setText(value);
+    }
+
+    private void setFeedback(String value) {
+        this.feedback.setText(value);
+    }
+
+    private void addListeners() {
+        subtractListener();
+        divideListener();
+        deriveFirstListener();
+        deriveSecondListener();
+        integrateFirstListener();
+        integrateSecondListener();
+        addListener();
+        muliplyListener();
     }
 
 }
