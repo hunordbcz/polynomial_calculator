@@ -1,6 +1,7 @@
 package models;
 
 import static validators.PolynomialValidator.isNull;
+import static validators.PolynomialValidator.isZero;
 
 public class PolynomialDivision extends Polynomial {
     private Polynomial remainder;
@@ -8,8 +9,8 @@ public class PolynomialDivision extends Polynomial {
     @Override
     public String getString() {
         String response = super.getString();
-        if (!isNull(remainder)) {
-            response += " (r:" + remainder.getString() + ")";
+        if (!isNull(remainder) && !isZero(remainder)) {
+            response = response + " (r:" + remainder.getString() + ")";
         }
         return response;
     }

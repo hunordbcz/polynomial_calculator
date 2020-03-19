@@ -2,6 +2,7 @@ package models;
 
 import exceptions.DifferentPowerException;
 import exceptions.InvalidInputException;
+import util.Constants;
 import util.MonomialUtil;
 
 import java.util.Collections;
@@ -10,7 +11,6 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static validators.PolynomialValidator.regex;
 import static validators.PolynomialValidator.validate;
 
 public class Polynomial implements Comparable<Polynomial> {
@@ -27,7 +27,7 @@ public class Polynomial implements Comparable<Polynomial> {
     public static Polynomial parsePolynomial(String value) throws InvalidInputException, DifferentPowerException {
         if (!validate(value)) throw new InvalidInputException("Polynomial entered is invalid.");
 
-        Pattern pattern = Pattern.compile(regex);
+        Pattern pattern = Pattern.compile(Constants.PATTERN_REGEX);
         Matcher matcher = pattern.matcher(value);
 
         Polynomial polynomial = null;

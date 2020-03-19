@@ -1,5 +1,7 @@
 package models;
 
+import util.Constants;
+
 public class Monomial implements Comparable<Monomial> {
     private Integer power;
     private Double coefficient;
@@ -15,7 +17,7 @@ public class Monomial implements Comparable<Monomial> {
         if (val.contains("x")) {
             monomial.power = 1;
         }
-        String[] value = val.split("x\\^|x");
+        String[] value = val.split(Constants.MONOMIAL_SPLIT_REGEX);
 
         if (value.length > 0) {
             if (value[0].equals("-")) {
